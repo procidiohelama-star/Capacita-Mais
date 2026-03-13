@@ -1,15 +1,59 @@
+import { useState } from 'react';
 import './Home.css';
 
-function Home() {
+// Importação das imagens dos cursos
+import tdahImg from '../assets/TDAH-simbolo.jpg';
+import teaImg from '../assets/simbolos-do-autismo-7_xl.jpeg';
+import touretteImg from '../assets/touretsimbolo.jpg';
+
+function Home({ onNavigate, onToggleCourse, selectedCourses }) {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  // Lista de cursos disponíveis para o Modal
+  const availableCourses = [
+    { id: 1, title: 'TDAH: Estratégias Práticas', image: tdahImg, duration: '2h', desc: 'Aprenda manejo de comportamento e foco.' },
+    { id: 2, title: 'TEA Nível 1 de Suporte', image: teaImg, duration: '3h', desc: 'Fundamentos e inclusão escolar.' },
+    { id: 3, title: 'Síndrome de Tourette', image: touretteImg, duration: '2h', desc: 'Manejo de tiques e práticas de suporte.' },
+  ];
+
   return (
     <div className="home-container">
       
-      {/* 💻 HEADER EXCLUSIVO PARA DESKTOP (Substitui o menu inferior) */}
+      {/* 1. BOTÃO FLUTUANTE (Fora do header para aparecer em qualquer tela) */}
+      <button className="fab-select" onClick={() => setIsModalOpen(true)}>
+        + Escolher Cursos
+      </button>
+
+      {/* 2. MODAL DE SELEÇÃO */}
+      {isModalOpen && (
+        <div className="modal-overlay">
+          <div className="modal-content">
+            <h3>Escolha seus Cursos</h3>
+            <div className="modal-grid">
+              {availableCourses.map(course => (
+                <div 
+                  key={course.id} 
+                  className={`modal-card ${selectedCourses && selectedCourses.find(c => c.id === course.id) ? 'selected' : ''}`}
+                  onClick={() => onToggleCourse(course)}
+                >
+                  <img src={course.image} alt={course.title} />
+                  <p>{course.title}</p>
+                </div>
+              ))}
+            </div>
+            <button className="btn-close-modal" onClick={() => setIsModalOpen(false)}>Pronto</button>
+          </div>
+        </div>
+      )}
+
+      {/* 💻 HEADER EXCLUSIVO PARA DESKTOP */}
       <header className="desktop-header">
         <div className="desktop-logo">Capacita<span>+</span></div>
         <nav className="desktop-nav">
           <button className="active">Início</button>
-          <button>Meus Cursos</button>
+          <button className='botoes' onClick={onNavigate}>
+            Meus Cursos {selectedCourses?.length > 0 && `(${selectedCourses.length})`}
+          </button>
           <button>Mentor+</button>
           <button>Meu Perfil</button>
         </nav>
@@ -19,7 +63,7 @@ function Home() {
         </div>
       </header>
 
-      {/* 📱 HEADER EXCLUSIVO PARA MOBILE (Igual ao protótipo) */}
+      {/* 📱 HEADER EXCLUSIVO PARA MOBILE */}
       <header className="mobile-header">
         <h2>Olá Sarah</h2>
         <button className="search-btn">🔍</button>
@@ -85,7 +129,7 @@ function Home() {
               </div>
             </div>
             <div className="card course-card">
-              <div className="course-img">🧩</div>
+              <div className="puzzle-img">🧩</div>
               <div className="course-info">
                 <h4>Inclusão Escolar</h4>
                 <p>4.8 ★ <span className="students">8.2k Estudantes</span></p>
@@ -124,10 +168,14 @@ function Home() {
 
       </main>
 
-      {/* 📱 MENU INFERIOR EXCLUSIVO PARA MOBILE (Igual ao protótipo) */}
+      {/* 📱 MENU INFERIOR MOBILE */}
       <nav className="mobile-bottom-nav">
-        <button className="nav-btn active"><span className="icon">🏠</span><span>Início</span></button>
-        <button className="nav-btn"><span className="icon">▶️</span><span>Meus Cursos</span></button>
+        <button className="nav-btn active">
+          <span className="icon">🏠</span><span>Início</span>
+        </button>
+        <button className="nav-btn" onClick={onNavigate}>
+          <span className="icon">▶️</span><span>Meus Cursos</span>
+        </button>
         <button className="nav-btn"><span className="icon">📖</span><span>Mentor+</span></button>
         <button className="nav-btn"><span className="icon">👤</span><span>Meu Perfil</span></button>
       </nav>
