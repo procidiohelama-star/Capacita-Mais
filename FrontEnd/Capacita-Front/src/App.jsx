@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
 import './App.css';
 
-// 👇 1. AQUI: Importamos a tela Home que acabamos de criar
-import Home from './pages/home'; 
+// Importação das páginas
+import Home from './pages/home.jsx'; 
+import MeusCursos from './pages/meusCursos.jsx'; 
 
 // Importações de imagens do login
 import logoImg from './assets/logo.png'; 
@@ -12,9 +13,9 @@ import facebookIcon from './assets/icon-facebook.png';
 
 function App() {
   const [isLoading, setIsLoading] = useState(true);
-  
-  // 👇 2. AQUI: Criamos a variável que diz se o usuário está logado (começa falso)
   const [isLoggedIn, setIsLoggedIn] = useState(false); 
+  const [selectedCourses, setSelectedCourses] = useState([]); 
+  const [currentPage, setCurrentPage] = useState('home'); 
   
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -27,18 +28,24 @@ function App() {
     return () => clearTimeout(timer);
   }, []);
 
-  // Função que roda quando clicamos no botão "Entrar"
+  // Função de Login
   const handleLogin = (e) => {
     e.preventDefault();
-    console.log("Pronto para enviar para o Back-end:", { email, password });
-    
-    // 👇 3. AQUI: Quando o botão Entrar for clicado, mudamos para VERDADEIRO
     setIsLoggedIn(true); 
   };
 
-  // --- ÁREA DE EXIBIÇÃO DA TELA ---
+  // Função para adicionar/remover curso da lista
+  const toggleCourse = (course) => {
+    setSelectedCourses(prev => 
+      prev.find(c => c.id === course.id) 
+        ? prev.filter(c => c.id !== course.id) 
+        : [...prev, course]
+    );
+  };
 
-  // Se estiver carregando, mostra o preloader
+  // --- ÁREA DE EXIBIÇÃO DA TELA (LÓGICA DE NAVEGAÇÃO) ---
+
+  // 1. Se estiver carregando, mostra o preloader
   if (isLoading) {
     return (
       <div className="preloader-container">
@@ -47,25 +54,38 @@ function App() {
     );
   }
 
-  // 👇 4. AQUI: Se o login for verdadeiro (clicou no botão), mostra a tela HOME e ignora o resto do código!
+  // 2. Se estiver logado, gerencia entre HOME e MEUS CURSOS
   if (isLoggedIn) {
-    return <Home />;
+    if (currentPage === 'meusCursos') {
+      return (
+        <MeusCursos 
+          onNavigate={() => setCurrentPage('home')} 
+          courses={selectedCourses} 
+        />
+      );
+    }
+    
+    // Se não estiver em meusCursos, mostra a Home
+    return (
+      <Home 
+        onNavigate={() => setCurrentPage('meusCursos')} 
+        onToggleCourse={toggleCourse} 
+        selectedCourses={selectedCourses}
+      />
+    );
   }
 
-  // Se o login for falso (padrão), ele chega até aqui e mostra a tela de LOGIN
+  // 3. Se não estiver logado, mostra a tela de LOGIN
   return (
     <div className="login-container">
-      {/* HEADER: LOGO */}
       <div className="login-header">
         <div className="logo">
           <img src={logoImg} alt="Logo Capacita Mais" className="logo-img" />
         </div>
       </div>
 
-      {/* FORMULÁRIO */}
       <div className="login-form-section">
         <form className="login-form" onSubmit={handleLogin}>
-          
           <div className="input-group">
             <label>Email</label>
             <input
@@ -98,7 +118,7 @@ function App() {
           <button type="submit" className="btn-entrar">Entrar</button>
 
           <p className="register-link">
-            Não possui conta ? <a href="#">Clique aqui</a>
+            Não possui conta? <a href="#">Clique aqui</a>
           </p>
 
           <div className="divider"></div>
@@ -114,7 +134,6 @@ function App() {
               <img src={facebookIcon} alt="Login com Facebook" />
             </button>
           </div>
-
         </form>
       </div>
     </div>
