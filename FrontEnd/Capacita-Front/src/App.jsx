@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 import { useState, useEffect } from 'react';
 import './App.css';
 
@@ -19,6 +20,20 @@ function App() {
   
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+=======
+import { BrowserRouter, Navigate, Routes, Route } from 'react-router-dom';
+import { Home } from './pages/home';
+import { Login } from './pages/Login';
+import { Register } from './pages/Register';
+import { Mentor } from './pages/Mentor';
+import { Profile } from './pages/Profile';
+import MeusCursos from './pages/meusCursos';
+
+const estaLogado = () => {
+  const token = localStorage.getItem('token');
+  return token !== null; 
+};
+>>>>>>> Stashed changes
 
   // Temporizador do Preloader
   useEffect(() => {
@@ -77,6 +92,7 @@ function App() {
 
   // 3. Se não estiver logado, mostra a tela de LOGIN
   return (
+<<<<<<< Updated upstream
     <div className="login-container">
       <div className="login-header">
         <div className="logo">
@@ -137,6 +153,33 @@ function App() {
         </form>
       </div>
     </div>
+=======
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={
+          <RotaProtegida>
+            <Home />
+          </RotaProtegida>}
+        />
+
+        <Route path="/mentor" element={<Mentor />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/registro" element={<Register />} />
+        
+        <Route path="/cursos" element={
+          <RotaProtegida>
+            <MeusCursos />
+          </RotaProtegida>
+        } />
+
+        <Route path="/perfil" element={
+          <RotaProtegida>
+            <Profile />
+          </RotaProtegida>}
+        />
+      </Routes>
+    </BrowserRouter>
+>>>>>>> Stashed changes
   );
 }
 

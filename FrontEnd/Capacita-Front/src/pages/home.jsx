@@ -24,6 +24,7 @@ function Home({ onNavigate, onToggleCourse, selectedCourses }) {
         + Escolher Cursos
       </button>
 
+<<<<<<< Updated upstream
       {/* 2. MODAL DE SELEÇÃO */}
       {isModalOpen && (
         <div className="modal-overlay">
@@ -40,6 +41,90 @@ function Home({ onNavigate, onToggleCourse, selectedCourses }) {
                   <p>{course.title}</p>
                 </div>
               ))}
+=======
+      <main className="main-content">
+        <section className="promo-banner">
+          <div>
+            <h2>Seja Premium e libere todos os conteúdos!</h2>
+            <p>Acesse Mentorias exclusivas e certificados validados pelo MEC.</p>
+          </div>
+          <Link to="/premium" className="btn-premium">Conhecer Planos</Link>
+        </section>
+
+        <section className="section-container">
+          {carregando ? (
+            <h3 className="section-title">Buscando informações...</h3>
+          ) : (
+            <>
+              <h3 className="section-title">
+                {cursosMatriculados.length > 0 ? 'Continue de onde parou' : 'Cursos que você pode gostar'}
+              </h3>
+              <div className="cards-grid">
+                {cursosMatriculados.length > 0 ? (
+                  cursosMatriculados.map((matricula) => (
+                    <div className="course-card" key={matricula.id}>
+                      <div className="course-image"></div>
+                      <div className="course-info">
+                        <h4>{matricula.course.title}</h4>
+                        <div className="progress-bar-bg">
+                          <div className="progress-bar-fill" style={{ width: '50%' }}></div>
+                        </div>
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <p style={{ color: '#666' }}>Você ainda não está matriculado em nenhum curso.</p>
+                )}
+              </div>
+            </>
+          )}
+        </section>
+        
+        <section className="section-container">
+          <h3 className="section-title">Explorar Categorias</h3>
+          <div className="categories-grid">
+            <div className="category-card">TDAH</div>
+            <div className="category-card">TEA</div>
+            <div className="category-card">Dislexia</div>
+            <div className="category-card">Altas Habilidades / Superdotação</div>
+            <div className="category-card">Educação Inclusiva</div>
+          </div>
+        </section>
+
+        <section className="section-container">
+          <h3 className="section-title">Cursos Mais Procurados</h3>
+          {carregando ? (
+             <p style={{ color: '#666' }}>Carregando catálogo...</p>
+          ) : (
+            <div className="cards-grid">
+              {cursosDisponiveis.length > 0 ? (
+                cursosDisponiveis.map((curso) => (
+                  <div className="course-card" key={curso.id}>
+                    <div className="course-image"></div>
+                    <div className="course-info">
+                      <h4>{curso.title}</h4>
+                      <p style={{ fontSize: '14px', color: '#666', marginBottom: '15px' }}>
+                        {curso.description}
+                      </p>
+                      <span style={{ 
+                        fontSize: '15px', 
+                        fontWeight: 'bold', 
+                        color: curso.price === 0 ? '#00796b' : '#333',
+                        backgroundColor: curso.price === 0 ? '#e0f2f1' : 'transparent',
+                        padding: curso.price === 0 ? '4px 8px' : '0',
+                        borderRadius: '4px'
+                      }}>
+                        {formatarPreco(curso.price)}
+                      </span>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <p style={{ color: '#666', fontStyle: 'italic' }}>
+                  Não existem cursos disponíveis no momento.
+                </p>
+              )}
+>>>>>>> Stashed changes
             </div>
             <button className="btn-close-modal" onClick={() => setIsModalOpen(false)}>Pronto</button>
           </div>
@@ -165,7 +250,6 @@ function Home({ onNavigate, onToggleCourse, selectedCourses }) {
             </div>
           </div>
         </section>
-
       </main>
 
       {/* 📱 MENU INFERIOR MOBILE */}
